@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../core/services/auth';
 import { Navbar } from '../navbar/navbar';
@@ -18,10 +19,12 @@ export class EnquiryList implements OnInit {
     isModalOpen: boolean = false;
     newStatus: string = '';
 
-    constructor(private auth: Auth) { }
+    constructor(private auth: Auth, @Inject(PLATFORM_ID) private platformId: Object) { }
 
     ngOnInit() {
-        this.loadEnquiries();
+        if (isPlatformBrowser(this.platformId)) {
+            this.loadEnquiries();
+        }
     }
 
     loadEnquiries() {

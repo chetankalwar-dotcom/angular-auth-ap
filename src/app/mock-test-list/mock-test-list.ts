@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Auth } from '../core/services/auth';
 import { Navbar } from '../navbar/navbar';
@@ -14,10 +15,12 @@ import { Observable } from 'rxjs';
 export class MockTestList implements OnInit {
   students$!: Observable<any[]>;
 
-  constructor(private auth: Auth) { }
+  constructor(private auth: Auth, @Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit() {
-    this.students$ = this.auth.getMockTests() as Observable<any[]>;
+    if (isPlatformBrowser(this.platformId)) {
+      this.students$ = this.auth.getMockTests() as Observable<any[]>;
+    }
   }
 
   downloadAdmitCard(student: any) {

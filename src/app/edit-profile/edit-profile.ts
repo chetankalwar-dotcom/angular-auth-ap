@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../core/services/auth';
 import { Router, RouterModule } from '@angular/router';
@@ -19,10 +20,10 @@ export class EditProfile implements OnInit {
     role: 'USER'
   };
 
-  constructor(private auth: Auth, private router: Router) { }
+  constructor(private auth: Auth, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) { }
 
   ngOnInit() {
-    if (typeof window !== 'undefined' && window.localStorage) {
+    if (isPlatformBrowser(this.platformId)) {
       const user = localStorage.getItem('user');
       if (user) {
         this.user = JSON.parse(user);

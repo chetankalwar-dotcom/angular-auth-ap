@@ -1,4 +1,5 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Auth } from '../core/services/auth';
 import { Navbar } from '../navbar/navbar';
@@ -34,7 +35,8 @@ export class MockTest {
         private auth: Auth,
         private router: Router,
         private cdr: ChangeDetectorRef,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        @Inject(PLATFORM_ID) private platformId: Object
     ) {
         this.registrationForm = this.fb.group({
             name: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/^[a-zA-Z\s]+$/)]],
@@ -52,7 +54,9 @@ export class MockTest {
     }
 
     ngOnInit() {
-        this.loadFormData();
+        if (isPlatformBrowser(this.platformId)) {
+            this.loadFormData();
+        }
     }
 
     ngOnDestroy() {

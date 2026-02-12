@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
     selector: 'app-navbar',
@@ -12,10 +12,10 @@ import { CommonModule } from '@angular/common';
 export class Navbar {
     user: any;
 
-    constructor(private router: Router) { }
+    constructor(private router: Router, @Inject(PLATFORM_ID) private platformId: Object) { }
 
     ngOnInit() {
-        if (typeof window !== 'undefined' && window.localStorage) {
+        if (isPlatformBrowser(this.platformId)) {
             const userStr = localStorage.getItem("user");
             if (userStr) {
                 this.user = JSON.parse(userStr);
