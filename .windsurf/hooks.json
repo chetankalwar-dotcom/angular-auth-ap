@@ -1,0 +1,23 @@
+{
+  "postEdit": [
+    {
+      "name": "Format Code",
+      "command": "npm run format"
+    },
+    {
+      "name": "Run Lint",
+      "command": "npm run lint"
+    }
+  ],
+
+  "preCommit": [
+    {
+      "name": "Run Unit Tests",
+      "command": "npm run test -- --watch=false"
+    },
+    {
+      "name": "Angular Build Check",
+      "command": "npm run build"
+    }
+  ]
+}

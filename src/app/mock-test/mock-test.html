@@ -1,0 +1,284 @@
+<app-navbar></app-navbar>
+<div class="mock-test-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white mb-4 mb-lg-0">
+                <h1 class="display-4 fw-bold mb-3">Ace Your Board Exams!</h1>
+                <p class="lead mb-4">Join the All-India Board Mock Test Series 2026. Experience the real exam atmosphere
+                    and boost your confidence.</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2"><i class="bi bi-check-circle-fill me-2"></i> Real-time Exam Environment</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill me-2"></i> Detailed Performance Analysis</li>
+                    <li class="mb-2"><i class="bi bi-check-circle-fill me-2"></i> Expert Crafted Papers</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="card registration-card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-4 card-title">Register Now</h3>
+                        <form [formGroup]="registrationForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Student Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" formControlName="name"
+                                        [class.is-invalid]="registrationForm.get('name')?.invalid && registrationForm.get('name')?.touched"
+                                        placeholder="Enter Name">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('name')?.invalid && registrationForm.get('name')?.touched">
+                                        <small *ngIf="registrationForm.get('name')?.errors?.['required']">Name is
+                                            required</small>
+                                        <small *ngIf="registrationForm.get('name')?.errors?.['minlength']">Name must be
+                                            at least 2 characters</small>
+                                        <small *ngIf="registrationForm.get('name')?.errors?.['pattern']">Name should
+                                            contain only letters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" formControlName="contact"
+                                            [class.is-invalid]="registrationForm.get('contact')?.invalid && registrationForm.get('contact')?.touched"
+                                            placeholder="Contact" [disabled]="otpVerified">
+                                        <button class="btn btn-outline-primary" type="button" (click)="sendOtp()"
+                                            *ngIf="!otpSent && !otpVerified">OTP</button>
+                                        <button class="btn btn-success" type="button" *ngIf="otpVerified" disabled><i
+                                                class="bi bi-check"></i></button>
+                                    </div>
+                                    <div class="invalid-feedback d-block"
+                                        *ngIf="registrationForm.get('contact')?.invalid && registrationForm.get('contact')?.touched">
+                                        <small *ngIf="registrationForm.get('contact')?.errors?.['required']">Contact
+                                            number is required</small>
+                                        <small *ngIf="registrationForm.get('contact')?.errors?.['pattern']">Contact must
+                                            be exactly 10 digits</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3" *ngIf="otpSent && !otpVerified">
+                                    <label class="form-label">Enter OTP</label>
+                                    <div class="input-group mb-2">
+                                        <input type="text" class="form-control" [(ngModel)]="enteredOtp"
+                                            [ngModelOptions]="{standalone: true}" placeholder="Enter 4-digit OTP">
+                                        <button class="btn btn-primary" type="button"
+                                            (click)="verifyOtp()">Verify</button>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3 p-2 rounded"
+                                        style="background-color: #f8f9fa;">
+                                        <div>
+                                            <small class="text-muted fw-bold" *ngIf="timeLeft > 0">
+                                                <i class="bi bi-clock-history me-1"></i>
+                                                Resend OTP in <span class="text-primary">{{timeLeft}}s</span>
+                                            </small>
+                                            <small class="text-success fw-bold"
+                                                *ngIf="timeLeft === 0 && isResendEnabled">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                You can now resend OTP
+                                            </small>
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" type="button"
+                                            *ngIf="isResendEnabled" (click)="resendOtp()">
+                                            <i class="bi bi-arrow-clockwise me-1"></i>
+                                            <strong>Resend OTP</strong>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Father's Name</label>
+                                    <input type="text" class="form-control" formControlName="fatherName"
+                                        [class.is-invalid]="registrationForm.get('fatherName')?.invalid && registrationForm.get('fatherName')?.touched"
+                                        placeholder="Father's Name">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('fatherName')?.invalid && registrationForm.get('fatherName')?.touched">
+                                        <small *ngIf="registrationForm.get('fatherName')?.errors?.['minlength']">Must be
+                                            at least 2 characters</small>
+                                        <small *ngIf="registrationForm.get('fatherName')?.errors?.['pattern']">Should
+                                            contain only letters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mother's Name</label>
+                                    <input type="text" class="form-control" formControlName="motherName"
+                                        [class.is-invalid]="registrationForm.get('motherName')?.invalid && registrationForm.get('motherName')?.touched"
+                                        placeholder="Mother's Name">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('motherName')?.invalid && registrationForm.get('motherName')?.touched">
+                                        <small *ngIf="registrationForm.get('motherName')?.errors?.['minlength']">Must be
+                                            at least 2 characters</small>
+                                        <small *ngIf="registrationForm.get('motherName')?.errors?.['pattern']">Should
+                                            contain only letters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" formControlName="email"
+                                        [class.is-invalid]="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched"
+                                        placeholder="Enter Email">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+                                        <small *ngIf="registrationForm.get('email')?.errors?.['email']">Please enter a
+                                            valid email address</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">School Name</label>
+                                    <input type="text" class="form-control" formControlName="school"
+                                        [class.is-invalid]="registrationForm.get('school')?.invalid && registrationForm.get('school')?.touched"
+                                        placeholder="School Name">
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('school')?.invalid && registrationForm.get('school')?.touched">
+                                        <small *ngIf="registrationForm.get('school')?.errors?.['minlength']">School name
+                                            must be at least 3 characters</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Board <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="board"
+                                        [class.is-invalid]="registrationForm.get('board')?.invalid && registrationForm.get('board')?.touched">
+                                        <option value="">Select Board</option>
+                                        <option value="CBSE">CBSE</option>
+                                        <option value="ICSE">ICSE</option>
+                                        <option value="State Board">State Board</option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('board')?.invalid && registrationForm.get('board')?.touched">
+                                        <small>Please select a board</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Stream <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="stream"
+                                        [class.is-invalid]="registrationForm.get('stream')?.invalid && registrationForm.get('stream')?.touched">
+                                        <option value="">Select Stream</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Commerce">Commerce</option>
+                                        <option value="Arts">Arts</option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('stream')?.invalid && registrationForm.get('stream')?.touched">
+                                        <small>Please select a stream</small>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">City <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="city" (change)="onCityChange()"
+                                        [class.is-invalid]="registrationForm.get('city')?.invalid && registrationForm.get('city')?.touched">
+                                        <option value="">Select City</option>
+                                        <option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('city')?.invalid && registrationForm.get('city')?.touched">
+                                        <small>Please select a city</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Test Center <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="testCenter"
+                                        [disabled]="!registrationForm.get('city')?.value"
+                                        [class.is-invalid]="registrationForm.get('testCenter')?.invalid && registrationForm.get('testCenter')?.touched">
+                                        <option value="">Select Test Center</option>
+                                        <option *ngFor="let center of centers" [value]="center">{{center}}</option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('testCenter')?.invalid && registrationForm.get('testCenter')?.touched">
+                                        <small>Please select a test center</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Exam Phase <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="examPhase"
+                                        [class.is-invalid]="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
+                                        <option value="">Select Exam Phase</option>
+                                        <option *ngFor="let phase of examPhases" [value]="phase.name">{{phase.name}}
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
+                                        <small>Please select an exam phase</small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 text-center mt-3">
+                                    <button class="btn btn-register w-100 py-2 fw-bold" (click)="register()"
+                                        [disabled]="!otpVerified || registrationForm.invalid">
+                                        Register for Mock Test
+                                    </button>
+                                    <div class="mt-2">
+                                        <small class="text-danger" *ngIf="!otpVerified">
+                                            <i class="bi bi-exclamation-circle"></i> Please verify your contact number
+                                            with OTP first
+                                        </small>
+                                        <small class="text-danger" *ngIf="otpVerified && registrationForm.invalid">
+                                            <i class="bi bi-exclamation-circle"></i> Please fill all required fields
+                                            marked with *
+                                        </small>
+                                        <small class="text-success" *ngIf="otpVerified && registrationForm.valid">
+                                            <i class="bi bi-check-circle"></i> Ready to register!
+                                        </small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-4 mb-lg-0">
+                <h5 class="text-white mb-3">About ALLEN</h5>
+                <p class="text-muted small">ALLEN Career Institute is the premier coaching institute for the preparation
+                    of JEE (Main+Advanced), JEE (Main), Pre-Medical (NEET-UG), Pre-Nurture & Career Foundation (Class VI
+                    to X, NTSE & Olympiads).</p>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-white mb-3">Quick Links</h5>
+                <ul class="list-unstyled text-muted small">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Courses</a></li>
+                    <li><a href="#">Results</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                <h5 class="text-white mb-3">Support</h5>
+                <ul class="list-unstyled text-muted small">
+                    <li><a href="#">FAQ</a></li>
+                    <li><a href="#">Terms & Conditions</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="col-lg-4">
+                <h5 class="text-white mb-3">Contact Us</h5>
+                <p class="text-muted small mb-2"><i class="bi bi-geo-alt me-2"></i> Sankalp, CP-6, Indra Vihar, Kota,
+                    Rajasthan, India</p>
+                <p class="text-muted small mb-2"><i class="bi bi-envelope me-2"></i> info@allen.in</p>
+                <p class="text-muted small"><i class="bi bi-telephone me-2"></i> +91-744-2757575</p>
+                <div class="social-links mt-3">
+                    <a href="#" class="me-2"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="me-2"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="me-2"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="me-2"><i class="bi bi-linkedin"></i></a>
+                    <a href="#"><i class="bi bi-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="border-secondary my-4">
+        <div class="row align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="text-muted small mb-0">&copy; 2026 ALLEN Career Institute Pvt. Ltd. All Rights Reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <p class="text-muted small mb-0">Designed with <i class="bi bi-heart-fill text-danger"></i> for Students
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>

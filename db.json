@@ -1,0 +1,147 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "email": "admin@gmail.com",
+      "password": "123456",
+      "role": "ADMIN"
+    },
+    {
+      "id": "2",
+      "name": "Normal User",
+      "email": "user@gmail.com",
+      "password": "123456",
+      "role": "USER"
+    },
+    {
+      "id": "3",
+      "name": "Manager User",
+      "email": "manager@gmail.com",
+      "password": "123456",
+      "role": "MANAGER"
+    },
+    {
+      "id": "799f",
+      "role": "USER",
+      "name": "chetan",
+      "email": "chetan@allen.in",
+      "password": "123456"
+    },
+    {
+      "id": "27dc",
+      "role": "USER",
+      "email": "admin",
+      "password": "admin123",
+      "name": "chetan"
+    },
+    {
+      "id": "07de",
+      "role": "ADMIN",
+      "email": "chetan.kalwar@allen.in",
+      "password": "123456",
+      "name": "chetan"
+    },
+    {
+      "id": "cefb",
+      "role": "USER",
+      "email": "admin",
+      "password": "admin123"
+    }
+  ],
+  "enquiries": [
+    {
+      "id": "2d5b",
+      "productName": "",
+      "description": "",
+      "contact": "",
+      "status": "Resolved",
+      "userId": "799f",
+      "userName": "chetan"
+    },
+    {
+      "id": "78f0",
+      "productName": "test",
+      "description": "test",
+      "contact": "9828818465",
+      "status": "Follow Up",
+      "userId": "799f",
+      "userName": "chetan"
+    }
+  ],
+  "mockTests": [
+    {
+      "id": "3199",
+      "name": "chetan",
+      "fatherName": "test",
+      "motherName": "test",
+      "contact": "9828818465",
+      "email": "abc@abc.com",
+      "school": "tesr",
+      "board": "CBSE",
+      "stream": "Science",
+      "city": "Kota",
+      "examPhase": "Phase 1 - April 2026",
+      "testCenter": "Allen Samyak"
+    },
+    {
+      "id": "8e2c",
+      "name": "chetan kalwar",
+      "fatherName": "hans raj kalwar",
+      "motherName": "test",
+      "contact": "9828818465",
+      "email": "abc@abc.com",
+      "school": "test",
+      "board": "CBSE",
+      "stream": "Science",
+      "city": "Jaipur",
+      "examPhase": "Phase 1 - April 2026",
+      "testCenter": "Allen Vaishali Nagar"
+    }
+  ],
+  "examPhases": [
+    {
+      "id": "1",
+      "name": "Phase 1 - April 2026"
+    },
+    {
+      "id": "2",
+      "name": "Phase 2 - May 2026"
+    }
+  ],
+  "cities": [
+    {
+      "id": "1",
+      "name": "Kota",
+      "centers": [
+        "Allen Samyak",
+        "Allen Sangyan",
+        "Allen Supath"
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Jaipur",
+      "centers": [
+        "Allen JLN Marg",
+        "Allen Vaishali Nagar"
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Delhi",
+      "centers": [
+        "Allen Kalu Sarai",
+        "Allen Punjabi Bagh"
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Mumbai",
+      "centers": [
+        "Allen Andheri",
+        "Allen Nerul"
+      ]
+    }
+  ]
+}

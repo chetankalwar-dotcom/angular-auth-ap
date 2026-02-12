@@ -1,0 +1,42 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <h3 class="mb-4">Registered Students for Mock Test</h3>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow">
+            <thead class="table-primary">
+                <tr>
+                    <th>Name</th>
+                    <th>Father's Name</th>
+                    <th>Board</th>
+                    <th>Stream</th>
+                    <th>Contact</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="students$ | async as students; else loading">
+                    <tr *ngFor="let student of students">
+                        <td>{{student.name}}</td>
+                        <td>{{student.fatherName}}</td>
+                        <td>{{student.board}}</td>
+                        <td>{{student.stream}}</td>
+                        <td>{{student.contact}}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" (click)="downloadAdmitCard(student)">
+                                Download Admit Card
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="students.length === 0">
+                        <td colspan="6" class="text-center">No students registered yet.</td>
+                    </tr>
+                </ng-container>
+                <ng-template #loading>
+                    <tr>
+                        <td colspan="6" class="text-center">Loading students...</td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </table>
+    </div>
+</div>

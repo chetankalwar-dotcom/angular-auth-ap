@@ -1,0 +1,30 @@
+<div class="login-bg d-flex align-items-center justify-content-center">
+
+  <div class="card shadow-lg login-card p-4">
+    <h3 class="text-center mb-4">Create Account</h3>
+
+    <input class="form-control mb-3" [(ngModel)]="user.name" placeholder="Full Name">
+
+    <input class="form-control mb-3" [(ngModel)]="user.email" placeholder="Email">
+
+    <input type="password" class="form-control mb-3" [(ngModel)]="user.password" placeholder="Password">
+
+    <select class="form-control mb-3" [(ngModel)]="user.role">
+      <option value="USER">User</option>
+      <option value="ADMIN">Admin</option>
+      <option value="MANAGER">Manager</option>
+
+
+    </select>
+
+    <button class="btn btn-success w-100 mb-2" (click)="signup()">
+      Signup
+    </button>
+
+    <div class="text-center">
+      <a routerLink="/login">Back to Login</a>
+    </div>
+
+  </div>
+
+</div>

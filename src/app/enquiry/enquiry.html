@@ -1,0 +1,51 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h3 class="text-center mb-4">Product Enquiry</h3>
+
+                <div class="mb-3">
+                    <label class="form-label">Product Name <span class="text-danger">*</span></label>
+                    <input class="form-control" [(ngModel)]="enquiry.productName" placeholder="Enter Product Name"
+                        required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Description <span class="text-danger">*</span></label>
+                    <textarea class="form-control" [(ngModel)]="enquiry.description" placeholder="Describe your enquiry"
+                        rows="3" required></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="enquiry.contact"
+                            placeholder="Contact Number" [disabled]="otpVerified">
+                        <button class="btn btn-outline-primary" type="button" (click)="sendOtp()"
+                            *ngIf="!otpSent && !otpVerified">Send OTP</button>
+                        <button class="btn btn-success" type="button" *ngIf="otpVerified" disabled>Verified</button>
+                    </div>
+                </div>
+
+                <div class="mb-3" *ngIf="otpSent && !otpVerified">
+                    <label class="form-label">Enter OTP</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" [(ngModel)]="enteredOtp"
+                            placeholder="Enter 4-digit OTP">
+                        <button class="btn btn-primary" type="button" (click)="verifyOtp()">Verify</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary w-100 mb-2" (click)="submitEnquiry()" [disabled]="!otpVerified">
+                    Submit Enquiry
+                </button>
+
+                <button class="btn btn-secondary w-100" routerLink="/dashboard">
+                    Cancel
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>

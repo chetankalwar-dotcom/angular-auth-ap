@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h3 class="text-center mb-4">Edit Profile</h3>
+
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input class="form-control" [(ngModel)]="user.name" placeholder="Full Name">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" [(ngModel)]="user.email" placeholder="Email">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="text" class="form-control" [(ngModel)]="user.password" placeholder="Password">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select class="form-select" [(ngModel)]="user.role">
+                        <option value="USER">USER</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="MANAGER">MANAGER</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary w-100 mb-2" (click)="updateProfile()">
+                    Update Profile
+                </button>
+
+                <button class="btn btn-secondary w-100" routerLink="/dashboard">
+                    Back to Dashboard
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>

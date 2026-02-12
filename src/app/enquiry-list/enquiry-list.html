@@ -1,0 +1,85 @@
+<app-navbar></app-navbar>
+<div class="container mt-5">
+    <h3 class="mb-4">Product Enquiries</h3>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped shadow">
+            <thead class="table-dark">
+                <tr>
+                    <th>User Name</th>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngIf="enquiries$ | async as enquiries; else loading">
+                    <tr *ngFor="let item of enquiries">
+                        <td>{{item.userName}}</td>
+                        <td>{{item.productName}}</td>
+                        <td>{{item.description}}</td>
+                        <td>{{item.contact}}</td>
+                        <td>
+                            <span class="badge" [ngClass]="{
+                                    'bg-warning': item.status === 'Pending',
+                                    'bg-success': item.status === 'Resolved',
+                                    'bg-info': item.status === 'New',
+                                    'bg-primary': item.status === 'Follow Up',
+                                    'bg-secondary': item.status === 'Transfer'
+                                }">
+                                {{item.status}}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-dark" (click)="openStatusModal(item)">Update
+                                Status</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="enquiries.length === 0">
+                        <td colspan="6" class="text-center">No enquiries found.</td>
+                    </tr>
+                </ng-container>
+                <ng-template #loading>
+                    <tr>
+                        <td colspan="6" class="text-center">Loading enquiries...</td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Backdrop -->
+<div class="modal-backdrop fade show" *ngIf="isModalOpen"></div>
+
+<!-- Modal -->
+<div class="modal fade show" tabindex="-1" style="display: block;" *ngIf="isModalOpen">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Update Status</h5>
+                <button type="button" class="btn-close" (click)="closeModal()"></button>
+            </div>
+            <div class="modal-body">
+                <p>Updating status for product: <strong>{{selectedEnquiry?.productName}}</strong></p>
+
+                <div class="mb-3">
+                    <label class="form-label">Select Status</label>
+                    <select class="form-select" [(ngModel)]="newStatus">
+                        <option value="New">New</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Follow Up">Follow Up</option>
+                        <option value="Transfer">Transfer</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                </div>
+
+                <div class="d-grid">
+                    <button class="btn btn-primary" (click)="updateStatus()">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

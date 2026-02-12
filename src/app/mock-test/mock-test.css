@@ -1,0 +1,104 @@
+.mock-test-hero {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    padding: 60px 0;
+    display: flex;
+    align-items: center;
+}
+
+.text-white {
+    color: #fff !important;
+}
+
+.registration-card {
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.card-title {
+    color: #1e3c72;
+    font-weight: 700;
+}
+
+.btn-register {
+    background: linear-gradient(to right, #1e3c72, #2a5298);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+    color: white;
+}
+
+.btn-register:disabled {
+    background: #ccc;
+    transform: none;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #444;
+}
+
+@media (max-width: 991px) {
+    .mock-test-hero {
+        padding: 40px 0;
+    }
+
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}
+
+.footer-section {
+    background-color: #101e36;
+    padding: 60px 0 30px;
+    color: #ffffff;
+    border-top: 5px solid #d32f2f;
+}
+
+.footer-section h5 {
+    color: #fff;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.footer-section a {
+    color: #adb5bd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 50%;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background: #d32f2f;
+    transform: translateY(-3px);
+}
+
+.text-muted {
+    color: #adb5bd !important;
+}
+
+.small {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}

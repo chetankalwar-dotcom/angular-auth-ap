@@ -1,0 +1,9 @@
+.login-bg{
+ height:100vh;
+ background: linear-gradient(135deg,#667eea,#764ba2);
+}
+
+.login-card{
+ width:350px;
+ border-radius:15px;
+}
