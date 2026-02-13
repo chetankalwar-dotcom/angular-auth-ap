@@ -1,11 +1,11 @@
-import { Component, ChangeDetectorRef, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, ChangeDetectorRef, Inject, PLATFORM_ID, NgZone } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Auth } from '../core/services/auth';
 import { Navbar } from '../navbar/navbar';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { interval, Subscription } from 'rxjs';
+import { interval, Subscription, BehaviorSubject, Observable } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -21,21 +21,23 @@ export class MockTest {
     cities: any[] = [];
     examPhases: any[] = [];
     centers: string[] = [];
+    photoPreview: string | null = null;
 
     otpSent: boolean = false;
     otpVerified: boolean = false;
     enteredOtp: string = '';
     generatedOtp: string = '';
 
-    timeLeft: number = 30;
-    timerSubscription?: Subscription;
-    isResendEnabled: boolean = false;
+    timeLeft$ = new BehaviorSubject<number>(30);
+    timerInterval: any;
+    isResendEnabled$ = new BehaviorSubject<boolean>(false);
 
     constructor(
         private auth: Auth,
         private router: Router,
         private cdr: ChangeDetectorRef,
         private fb: FormBuilder,
+        private zone: NgZone,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {
         this.registrationForm = this.fb.group({
@@ -49,7 +51,8 @@ export class MockTest {
             stream: ['', [Validators.required]],
             city: ['', [Validators.required]],
             examPhase: ['', [Validators.required]],
-            testCenter: ['', [Validators.required]]
+            testCenter: [{ value: '', disabled: true }, [Validators.required]],
+            studentPhoto: ['', [Validators.required]]
         });
     }
 
@@ -60,8 +63,8 @@ export class MockTest {
     }
 
     ngOnDestroy() {
-        if (this.timerSubscription) {
-            this.timerSubscription.unsubscribe();
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
         }
     }
 
@@ -71,10 +74,56 @@ export class MockTest {
     }
 
     onCityChange() {
-        const cityValue = this.registrationForm.get('city')?.value;
-        const selectedCity = this.cities.find(c => c.name === cityValue);
-        this.centers = selectedCity ? selectedCity.centers : [];
-        this.registrationForm.patchValue({ testCenter: '' }); // Reset center when city changes
+        const cityControl = this.registrationForm.get('city');
+        const centerControl = this.registrationForm.get('testCenter');
+
+        if (cityControl?.value) {
+            const selectedCity = this.cities.find(c => c.name === cityControl.value);
+            this.centers = selectedCity ? selectedCity.centers : [];
+            centerControl?.enable();
+        } else {
+            this.centers = [];
+            centerControl?.disable();
+        }
+        this.registrationForm.patchValue({ testCenter: '' });
+    }
+
+    onFileSelected(event: any) {
+        const file = event.target.files[0];
+        if (file) {
+            console.log('File selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file.');
+                return;
+            }
+
+            // Validate size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Image size should be less than 2MB.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                console.log('FileReader loaded successfully');
+                this.zone.run(() => {
+                    console.log('Updating photoPreview in NgZone');
+                    this.photoPreview = reader.result as string;
+                    this.registrationForm.patchValue({
+                        studentPhoto: this.photoPreview
+                    });
+                    this.registrationForm.get('studentPhoto')?.updateValueAndValidity();
+                    console.log('Triggering detectChanges');
+                    this.cdr.detectChanges();
+                });
+            };
+            reader.onerror = (error) => {
+                console.error('FileReader error:', error);
+            };
+            reader.readAsDataURL(file);
+        }
     }
 
     sendOtp() {
@@ -95,30 +144,42 @@ export class MockTest {
     }
 
     startTimer() {
-        this.timeLeft = 30;
-        this.isResendEnabled = false;
-        console.log('Timer started, timeLeft:', this.timeLeft, 'isResendEnabled:', this.isResendEnabled);
+        this.timeLeft$.next(30);
+        this.isResendEnabled$.next(false);
+        console.log('Timer started, timeLeft: 30');
 
-        // Unsubscribe from previous timer if exists
-        if (this.timerSubscription) {
-            this.timerSubscription.unsubscribe();
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
         }
 
-        // Use RxJS interval for better Angular integration
-        this.timerSubscription = interval(1000).pipe(take(31)).subscribe(() => {
-            if (this.timeLeft > 0) {
-                this.timeLeft--;
-                console.log('Timer tick, timeLeft:', this.timeLeft);
-                this.cdr.markForCheck(); // Force change detection
-            } else {
-                this.isResendEnabled = true;
-                console.log('Timer expired! isResendEnabled:', this.isResendEnabled);
-                this.cdr.markForCheck(); // Force change detection
-                if (this.timerSubscription) {
-                    this.timerSubscription.unsubscribe();
+        this.timerInterval = setInterval(() => {
+            this.zone.run(() => {
+                const current = this.timeLeft$.value;
+                if (current > 0) {
+                    const nextValue = current - 1;
+                    this.timeLeft$.next(nextValue);
+                    console.log('Timer tick, timeLeft:', nextValue);
+                } else {
+                    this.isResendEnabled$.next(true);
+                    console.log('Timer expired!');
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
                 }
+            });
+        }, 1000);
+    }
+
+    logFormErrors() {
+        console.log("=== Form Validation Status ===");
+        Object.keys(this.registrationForm.controls).forEach(key => {
+            const control = this.registrationForm.get(key);
+            if (control?.invalid) {
+                console.log(`Control: ${key}, Errors:`, control.errors);
             }
         });
+        console.log("Form Validity:", this.registrationForm.valid);
+        console.log("OTP Verified:", this.otpVerified);
+        console.log("Timer Value:", this.timeLeft$.value);
     }
 
     verifyOtp() {
@@ -129,8 +190,10 @@ export class MockTest {
 
         if (trimmedOtp === this.generatedOtp) {
             this.otpVerified = true;
-            if (this.timerSubscription) {
-                this.timerSubscription.unsubscribe();
+            this.registrationForm.get('contact')?.disable();
+            if (this.timerInterval) {
+                clearInterval(this.timerInterval);
+                this.timerInterval = null;
             }
             alert("OTP Verified Successfully!");
         } else {
@@ -140,6 +203,7 @@ export class MockTest {
 
     register() {
         if (this.registrationForm.invalid) {
+            this.logFormErrors();
             alert("Please fill all required fields correctly!");
             this.registrationForm.markAllAsTouched();
             return;

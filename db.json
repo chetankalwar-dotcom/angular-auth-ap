@@ -97,6 +97,32 @@
       "city": "Jaipur",
       "examPhase": "Phase 1 - April 2026",
       "testCenter": "Allen Vaishali Nagar"
+    },
+    {
+      "id": "4f81",
+      "name": "test",
+      "fatherName": "test",
+      "motherName": "test",
+      "email": "abc@abc.com",
+      "school": "test",
+      "board": "CBSE",
+      "stream": "Science",
+      "city": "Kota",
+      "examPhase": "Phase 1 - April 2026",
+      "testCenter": "Allen Samyak"
+    },
+    {
+      "id": "cfa9",
+      "name": "chetan",
+      "fatherName": "test",
+      "motherName": "test",
+      "email": "abc@abc.com",
+      "school": "test",
+      "board": "CBSE",
+      "stream": "Science",
+      "city": "Jaipur",
+      "examPhase": "Phase 1 - April 2026",
+      "testCenter": "Allen JLN Marg"
     }
   ],
   "examPhases": [
@@ -107,6 +133,10 @@
     {
       "id": "2",
       "name": "Phase 2 - May 2026"
+    },
+    {
+      "id": "3",
+      "name": "Phase 3 - June 2026"
     }
   ],
   "cities": [

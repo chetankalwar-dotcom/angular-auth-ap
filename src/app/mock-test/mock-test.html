@@ -38,7 +38,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" formControlName="contact"
                                             [class.is-invalid]="registrationForm.get('contact')?.invalid && registrationForm.get('contact')?.touched"
-                                            placeholder="Contact" [disabled]="otpVerified">
+                                            placeholder="Contact">
                                         <button class="btn btn-outline-primary" type="button" (click)="sendOtp()"
                                             *ngIf="!otpSent && !otpVerified">OTP</button>
                                         <button class="btn btn-success" type="button" *ngIf="otpVerified" disabled><i
@@ -63,22 +63,24 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3 p-2 rounded"
                                         style="background-color: #f8f9fa;">
-                                        <div>
-                                            <small class="text-muted fw-bold" *ngIf="timeLeft > 0">
-                                                <i class="bi bi-clock-history me-1"></i>
-                                                Resend OTP in <span class="text-primary">{{timeLeft}}s</span>
-                                            </small>
-                                            <small class="text-success fw-bold"
-                                                *ngIf="timeLeft === 0 && isResendEnabled">
-                                                <i class="bi bi-check-circle me-1"></i>
-                                                You can now resend OTP
-                                            </small>
-                                        </div>
-                                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" type="button"
-                                            *ngIf="isResendEnabled" (click)="resendOtp()">
-                                            <i class="bi bi-arrow-clockwise me-1"></i>
-                                            <strong>Resend OTP</strong>
-                                        </button>
+                                        <ng-container *ngIf="{ val: timeLeft$ | async } as timerState">
+                                            <div>
+                                                <small class="text-muted fw-bold" *ngIf="timerState.val! > 0">
+                                                    <i class="bi bi-clock-history me-1"></i>
+                                                    Resend OTP in <span class="text-primary">{{timerState.val}}s</span>
+                                                </small>
+                                                <small class="text-success fw-bold"
+                                                    *ngIf="timerState.val === 0 && (isResendEnabled$ | async)">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    You can now resend OTP
+                                                </small>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3"
+                                                type="button" *ngIf="isResendEnabled$ | async" (click)="resendOtp()">
+                                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                                <strong>Resend OTP</strong>
+                                            </button>
+                                        </ng-container>
                                     </div>
                                 </div>
 
@@ -144,6 +146,7 @@
                                         <small>Please select a board</small>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Stream <span class="text-danger">*</span></label>
                                     <select class="form-select" formControlName="stream"
@@ -158,6 +161,21 @@
                                         <small>Please select a stream</small>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Exam Phase <span class="text-danger">*</span></label>
+                                    <select class="form-select" formControlName="examPhase"
+                                        [class.is-invalid]="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
+                                        <option value="">Select Exam Phase</option>
+                                        <option *ngFor="let phase of examPhases" [value]="phase.name">{{phase.name}}
+                                        </option>
+                                    </select>
+                                    <div class="invalid-feedback"
+                                        *ngIf="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
+                                        <small>Please select an exam phase</small>
+                                    </div>
+                                </div>
+
                                 <div class="col-12 mb-3">
                                     <label class="form-label">City <span class="text-danger">*</span></label>
                                     <select class="form-select" formControlName="city" (change)="onCityChange()"
@@ -174,7 +192,6 @@
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Test Center <span class="text-danger">*</span></label>
                                     <select class="form-select" formControlName="testCenter"
-                                        [disabled]="!registrationForm.get('city')?.value"
                                         [class.is-invalid]="registrationForm.get('testCenter')?.invalid && registrationForm.get('testCenter')?.touched">
                                         <option value="">Select Test Center</option>
                                         <option *ngFor="let center of centers" [value]="center">{{center}}</option>
@@ -185,17 +202,37 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Exam Phase <span class="text-danger">*</span></label>
-                                    <select class="form-select" formControlName="examPhase"
-                                        [class.is-invalid]="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
-                                        <option value="">Select Exam Phase</option>
-                                        <option *ngFor="let phase of examPhases" [value]="phase.name">{{phase.name}}
-                                        </option>
-                                    </select>
-                                    <div class="invalid-feedback"
-                                        *ngIf="registrationForm.get('examPhase')?.invalid && registrationForm.get('examPhase')?.touched">
-                                        <small>Please select an exam phase</small>
+                                <div class="col-12 mb-4">
+                                    <label class="form-label fw-bold">Student Photo <span
+                                            class="text-danger">*</span></label>
+                                    <div class="photo-upload-container p-3 border rounded text-center"
+                                        [class.border-danger]="registrationForm.get('studentPhoto')?.invalid && registrationForm.get('studentPhoto')?.touched">
+                                        <div *ngIf="!photoPreview" class="py-3">
+                                            <i class="bi bi-camera shadow-sm rounded-circle p-3 mb-2 d-inline-block bg-light"
+                                                style="font-size: 24px;"></i>
+                                            <p class="mb-2 small text-muted">Upload a clear passport size photo</p>
+                                            <input type="file" #photoInput class="d-none"
+                                                (change)="onFileSelected($event)" accept="image/*">
+
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                (click)="photoInput.click()">
+                                                Choose Photo
+                                            </button>
+                                        </div>
+                                        <div *ngIf="photoPreview" class="position-relative d-inline-block">
+                                            <img [src]="photoPreview" class="img-thumbnail" style="max-height: 150px;"
+                                                alt="Student Photo">
+
+                                            <button type="button"
+                                                class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle rounded-circle"
+                                                (click)="photoPreview = null; registrationForm.get('studentPhoto')?.setValue('')">
+                                                <i class="bi bi-x"></i>
+                                            </button>
+                                        </div>
+                                        <div class="invalid-feedback d-block"
+                                            *ngIf="registrationForm.get('studentPhoto')?.invalid && registrationForm.get('studentPhoto')?.touched">
+                                            <small>Please upload a student photo</small>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -204,9 +241,11 @@
                                         [disabled]="!otpVerified || registrationForm.invalid">
                                         Register for Mock Test
                                     </button>
+
                                     <div class="mt-2">
                                         <small class="text-danger" *ngIf="!otpVerified">
-                                            <i class="bi bi-exclamation-circle"></i> Please verify your contact number
+                                            <i class="bi bi-exclamation-circle"></i> Please verify your contact
+                                            number
                                             with OTP first
                                         </small>
                                         <small class="text-danger" *ngIf="otpVerified && registrationForm.invalid">
@@ -275,6 +314,7 @@
             <div class="col-md-6 text-center text-md-start">
                 <p class="text-muted small mb-0">&copy; 2026 ALLEN Career Institute Pvt. Ltd. All Rights Reserved.</p>
             </div>
+
             <div class="col-md-6 text-center text-md-end">
                 <p class="text-muted small mb-0">Designed with <i class="bi bi-heart-fill text-danger"></i> for Students
                 </p>

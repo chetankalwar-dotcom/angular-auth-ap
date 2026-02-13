@@ -40,14 +40,19 @@ export class MockTestList implements OnInit {
           <h1>Board Mock Test 2026</h1>
           <h2 style="text-align:center;">Admit Card</h2>
           <hr>
-          <div class="details">
-            <p><strong>Name:</strong> ${student.name}</p>
-            <p><strong>Father's Name:</strong> ${student.fatherName}</p>
-            <p><strong>Mother's Name:</strong> ${student.motherName}</p>
-            <p><strong>Board:</strong> ${student.board}</p>
-            <p><strong>Stream:</strong> ${student.stream}</p>
-            <p><strong>School:</strong> ${student.school}</p>
-            <p><strong>Exam Center:</strong> Allen Career Institute, ${student.city}</p>
+          <div class="details" style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <p><strong>Name:</strong> ${student.name}</p>
+              <p><strong>Father's Name:</strong> ${student.fatherName}</p>
+              <p><strong>Mother's Name:</strong> ${student.motherName}</p>
+              <p><strong>Board:</strong> ${student.board}</p>
+              <p><strong>Stream:</strong> ${student.stream}</p>
+              <p><strong>School:</strong> ${student.school}</p>
+              <p><strong>Exam Center:</strong> Allen Career Institute, ${student.city}</p>
+            </div>
+            <div style="border: 1px solid #000; width: 120px; height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <img src="${student.studentPhoto}" style="max-width: 100%; max-height: 100%;" alt="Photo">
+            </div>
           </div>
           <div class="footer">
             <p>Please bring this admit card to the exam center.</p>
