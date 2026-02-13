@@ -1,21 +1,76 @@
-<div class="login-bg d-flex align-items-center justify-content-center">
-
-  <div class="card shadow-lg login-card p-4">
-    <h3 class="text-center mb-4">Welcome Back....</h3>
-
-    <input class="form-control mb-3" [(ngModel)]="email" placeholder="Enter Email">
-
-    <input type="password" class="form-control mb-3" [(ngModel)]="password" placeholder="Enter Password">
-
-    <button class="btn btn-primary w-100 mb-2" (click)="login()">
-      Login
-    </button>
-
-    <div class="text-center">
-      <a routerLink="/signup">Create Account</a>
-    </div>
-
-
+<div class="login-container">
+  <!-- Background Decorative Elements -->
+  <div class="geometric-bg">
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
   </div>
 
+  <div class="login-content">
+    <!-- Left Hero Section -->
+    <div class="hero-section">
+      <h1>Secure Your Future.</h1>
+      <p>The ultimate platform for Mock Test Registration and Management. Efficient, reliable, and built for excellence.
+      </p>
+
+      <ul class="feature-list">
+        <li class="feature-item">
+          <i class="bi bi-shield-check"></i>
+          Secure OTP Verification
+        </li>
+        <li class="feature-item">
+          <i class="bi bi-file-earmark-pdf"></i>
+          Instant Admit Card Generation
+        </li>
+        <li class="feature-item">
+          <i class="bi bi-grid-3x3-gap"></i>
+          Streamlined Bulk Registration
+        </li>
+      </ul>
+    </div>
+
+    <!-- Right Login Section -->
+    <div class="login-card-section">
+      <form class="glass-card" #loginForm="ngForm" (ngSubmit)="loginForm.valid && login()">
+        <h2 class="mb-4 fw-bold">Sign In</h2>
+        <p class="text-secondary small mb-4">Please enter your credentials to access the portal.</p>
+
+        <div class="mb-3">
+          <label class="form-label small text-secondary">Email Address</label>
+          <input class="form-control" [(ngModel)]="email" name="email" #emailModel="ngModel"
+            placeholder="name@company.com" autocomplete="off" required>
+          <div *ngIf="emailModel.invalid && emailModel.touched" class="text-danger small mt-1">
+            Email is required
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label small text-secondary">Password</label>
+          <input type="password" class="form-control" [(ngModel)]="password" name="password" #passwordModel="ngModel"
+            placeholder="••••••••" autocomplete="new-password" required>
+          <div *ngIf="passwordModel.invalid && passwordModel.touched" class="text-danger small mt-1">
+            Password is required
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe" [(ngModel)]="rememberMe">
+            <label class="form-check-label small" for="rememberMe">
+              Remember Me
+            </label>
+          </div>
+          <a routerLink="/signup" class="small text-primary text-decoration-none">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-4" [disabled]="loginForm.invalid">
+          Login Account
+        </button>
+
+        <div class="text-center">
+          <span class="text-secondary small">Don't have an account? </span>
+          <a routerLink="/signup" class="text-primary small text-decoration-none fw-bold">Create Account</a>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

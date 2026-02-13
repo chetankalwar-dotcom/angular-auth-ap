@@ -225,13 +225,17 @@
 
                                             <button type="button"
                                                 class="btn btn-danger btn-sm position-absolute top-0 start-100 translate-middle rounded-circle"
-                                                (click)="photoPreview = null; registrationForm.get('studentPhoto')?.setValue('')">
+                                                (click)="photoPreview = null; registrationForm.get('studentPhoto')?.setValue(''); photoSizeError = false">
                                                 <i class="bi bi-x"></i>
                                             </button>
                                         </div>
                                         <div class="invalid-feedback d-block"
-                                            *ngIf="registrationForm.get('studentPhoto')?.invalid && registrationForm.get('studentPhoto')?.touched">
+                                            *ngIf="registrationForm.get('studentPhoto')?.invalid && registrationForm.get('studentPhoto')?.touched && !photoSizeError">
                                             <small>Please upload a student photo</small>
+                                        </div>
+                                        <div class="text-danger d-block mt-1" *ngIf="photoSizeError">
+                                            <small><i class="bi bi-exclamation-triangle"></i> Photo size must be less
+                                                than 1MB. Please choose a smaller file.</small>
                                         </div>
                                     </div>
                                 </div>

@@ -11,6 +11,7 @@ export class Auth {
   constructor(private http: HttpClient) { }
 
   login(email: any, password: any) {
+    debugger;
     return this.http.get(`${this.api}?email=${email}&password=${password}`);
   }
 

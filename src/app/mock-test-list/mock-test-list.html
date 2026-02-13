@@ -1,6 +1,43 @@
 <app-navbar></app-navbar>
 <div class="container mt-5">
-    <h3 class="mb-4">Registered Students for Mock Test</h3>
+    <div class="row align-items-center mb-4">
+        <div class="col">
+            <h3 class="m-0">Registered Students for Mock Test</h3>
+        </div>
+        <div class="col-auto">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body p-2 d-flex align-items-center">
+                    <div class="me-3">
+                        <small class="text-muted d-block">Bulk registration</small>
+                        <button class="btn btn-outline-primary btn-sm" (click)="excelInput.click()"
+                            [disabled]="isUploading">
+                            <i class="bi bi-file-earmark-excel me-1"></i>
+                            {{ isUploading ? 'Uploading...' : 'Upload Excel' }}
+                        </button>
+                        <button class="btn btn-link btn-sm text-decoration-none" (click)="downloadSampleExcel()">
+                            <i class="bi bi-download me-1"></i>
+                            Download Sample
+                        </button>
+                        <input type="file" #excelInput class="d-none" (change)="onFileChange($event)"
+                            accept=".xlsx, .xls">
+                    </div>
+                    <div *ngIf="uploadStatus" class="ms-2">
+                        <span class="badge" [ngClass]="uploadStatus.type === 'success' ? 'bg-success' : 'bg-danger'">
+                            {{ uploadStatus.message }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Upload Instructions -->
+    <div class="alert alert-info py-2 mb-4" style="font-size: 0.85rem;">
+        <i class="bi bi-info-circle me-1"></i>
+        <strong>Excel Format:</strong> Name, Father's Name, Mother's Name, Email, School, Board, Stream, Contact, City,
+        Center, Phase.
+    </div>
+
     <div class="table-responsive">
         <table class="table table-bordered table-hover shadow">
             <thead class="table-primary">

@@ -22,6 +22,7 @@ export class MockTest {
     examPhases: any[] = [];
     centers: string[] = [];
     photoPreview: string | null = null;
+    photoSizeError: boolean = false;
 
     otpSent: boolean = false;
     otpVerified: boolean = false;
@@ -99,11 +100,14 @@ export class MockTest {
                 return;
             }
 
-            // Validate size (max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('Image size should be less than 2MB.');
+            // Validate size (max 1MB)
+            if (file.size > 1 * 1024 * 1024) {
+                this.photoSizeError = true;
+                this.photoPreview = null;
+                this.registrationForm.patchValue({ studentPhoto: '' });
                 return;
             }
+            this.photoSizeError = false;
 
             const reader = new FileReader();
             reader.onload = () => {
@@ -202,6 +206,7 @@ export class MockTest {
     }
 
     register() {
+        debugger
         if (this.registrationForm.invalid) {
             this.logFormErrors();
             alert("Please fill all required fields correctly!");
